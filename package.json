@@ -8,7 +8,11 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "typecheck": "tsc --noEmit -p tsconfig.app.json"
+    "typecheck": "tsc --noEmit -p tsconfig.app.json",
+    "test": "npm run test:smoke",
+    "test:smoke": "node tests/smoke.js",
+    "db:types": "echo 'Database types are managed via Supabase'",
+    "db:seed": "echo 'Run seed data via Supabase dashboard or SQL editor'"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.57.4",

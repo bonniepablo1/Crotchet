@@ -62,6 +62,17 @@ The database migration has already been applied with the following:
 - Indexes for performance optimization
 - Triggers for automatic match creation
 
+#### Optional: Seed Test Data
+
+To populate the database with test data for development:
+
+1. Open Supabase Dashboard > SQL Editor
+2. Open `supabase/seed.sql` from this project
+3. Copy and paste the SQL into the editor
+4. Click "Run" to execute
+
+This will create 4 test users with profiles, likes, matches, and sample messages.
+
 ### 4. Run Development Server
 
 ```bash
@@ -70,7 +81,15 @@ npm run dev
 
 The app will be available at `http://localhost:5173`
 
-### 5. Build for Production
+### 5. Run Tests
+
+```bash
+npm test
+```
+
+This runs the smoke tests to verify database schema, authentication, RLS policies, and core functionality.
+
+### 6. Build for Production
 
 ```bash
 npm run build
@@ -195,6 +214,62 @@ Potential features for future development:
 - Social media authentication
 - Profile verification system
 - Reporting and blocking functionality
+
+## Available Scripts
+
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm test` - Run smoke tests
+- `npm run lint` - Run ESLint
+- `npm run typecheck` - Run TypeScript type checking
+- `npm run preview` - Preview production build
+
+## Testing
+
+### Smoke Tests
+
+The project includes comprehensive smoke tests in `tests/smoke.js` that verify:
+
+1. Database schema integrity
+2. Authentication endpoints
+3. Profile read access
+4. Row Level Security (RLS) policies
+5. Database constraints
+6. Performance indexes
+
+Run tests with:
+```bash
+npm test
+```
+
+All tests must pass before deploying to production.
+
+## Database Operations
+
+### Migrations
+
+Database migrations are stored in `supabase/migrations/`. See [RUNBOOK.md](./RUNBOOK.md) for detailed instructions on:
+- Applying migrations to staging/production
+- Rolling back migrations
+- Creating database backups
+- Migration best practices
+
+### Seed Data
+
+Test data can be seeded using `supabase/seed.sql`. This creates sample users, profiles, likes, matches, and messages for development and testing.
+
+## Documentation
+
+- **[RUNBOOK.md](./RUNBOOK.md)** - Operations guide for database migrations, backups, deployment, and troubleshooting
+- **[.env.example](./.env.example)** - Template for environment variables
+
+## Deployment
+
+See [RUNBOOK.md](./RUNBOOK.md) for detailed deployment instructions including:
+- Environment setup
+- Deployment checklist
+- Platform-specific guides (Vercel, Netlify, custom server)
+- Monitoring and maintenance
 
 ## License
 
