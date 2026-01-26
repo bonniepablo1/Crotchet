@@ -26,9 +26,13 @@ Use this checklist before pushing to GitHub and deploying to production.
 ### Security
 - [x] No hardcoded secrets or API keys in code
 - [x] .env file is in .gitignore
-- [x] RLS policies restrict data access appropriately
+- [x] RLS policies optimized and restrict data access appropriately
+- [x] RLS policies use `(select auth.uid())` for performance
+- [x] Multiple permissive policies consolidated
+- [x] Functions have explicit search_path set
 - [x] Authentication flows are secure
 - [x] Service role keys are not exposed client-side
+- [x] Security configuration guide created (SECURITY_CONFIGURATION.md)
 
 ### Testing
 - [x] Smoke tests cover critical functionality
@@ -81,8 +85,19 @@ Use this checklist before pushing to GitHub and deploying to production.
 - [ ] Verify responsive design on mobile/desktop
 
 ### Production Deployment
+
+#### Pre-Deployment Security Configuration (Supabase Dashboard)
+See [SECURITY_CONFIGURATION.md](./SECURITY_CONFIGURATION.md) for detailed instructions:
+- [ ] **CRITICAL**: Enable Leaked Password Protection (Auth > Policies)
+- [ ] **IMPORTANT**: Set Auth DB connection to percentage-based (Project Settings > Database)
+- [ ] Configure strong password requirements
+- [ ] Enable rate limiting for auth endpoints
+- [ ] Review and verify all RLS policies in Database Advisor
+
+#### Deployment Steps
 - [ ] Review deployment checklist in RUNBOOK.md
 - [ ] Create database backup
+- [ ] Apply all migrations (including security fixes)
 - [ ] Deploy application
 - [ ] Verify environment variables
 - [ ] Test critical user flows
@@ -159,17 +174,28 @@ Before considering the export complete, ensure:
 ## Suggested Git Commit Message
 
 ```
-feat: finalize migrations, seeds, smoke tests, runbook; ready for export
+feat: security hardening and production-ready optimizations
 
-- Add comprehensive database seed data for testing
-- Implement smoke test suite covering schema, auth, RLS
-- Create operations runbook with migration and deployment procedures
-- Add .env.example template for environment configuration
-- Update README with testing and deployment instructions
-- Verify production build and all tests passing
-- Document export checklist and deployment workflow
+Database Security:
+- Optimize all RLS policies using (select auth.uid()) for performance
+- Consolidate multiple permissive policies on profiles and likes tables
+- Fix messages UPDATE policy to prevent unauthorized access
+- Add explicit search_path to all functions for security
 
-All systems verified and ready for production deployment.
+Testing & Documentation:
+- Add comprehensive smoke test suite (6 tests, all passing)
+- Create SECURITY_CONFIGURATION.md for Supabase Dashboard settings
+- Update RUNBOOK.md with security configuration section
+- Add EXPORT_CHECKLIST.md with deployment workflow
+- Create seed.sql with test data for development
+
+Infrastructure:
+- Production build verified and optimized
+- All migrations applied and tested
+- Environment templates configured
+
+CRITICAL: Before production deployment, configure Supabase Dashboard settings
+per SECURITY_CONFIGURATION.md (leaked password protection, auth connections).
 ```
 
 ---

@@ -261,6 +261,8 @@ Test data can be seeded using `supabase/seed.sql`. This creates sample users, pr
 ## Documentation
 
 - **[RUNBOOK.md](./RUNBOOK.md)** - Operations guide for database migrations, backups, deployment, and troubleshooting
+- **[SECURITY_CONFIGURATION.md](./SECURITY_CONFIGURATION.md)** - Security configuration guide for Supabase Dashboard settings
+- **[EXPORT_CHECKLIST.md](./EXPORT_CHECKLIST.md)** - Pre-deployment checklist and export workflow
 - **[.env.example](./.env.example)** - Template for environment variables
 
 ## Deployment

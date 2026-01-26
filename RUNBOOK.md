@@ -1,11 +1,48 @@
 # Crotchet Dating App - Operations Runbook
 
 ## Table of Contents
-1. [Database Migrations](#database-migrations)
-2. [Backup and Recovery](#backup-and-recovery)
-3. [Deployment](#deployment)
-4. [Monitoring and Maintenance](#monitoring-and-maintenance)
-5. [Troubleshooting](#troubleshooting)
+1. [Security Configuration](#security-configuration)
+2. [Database Migrations](#database-migrations)
+3. [Backup and Recovery](#backup-and-recovery)
+4. [Deployment](#deployment)
+5. [Monitoring and Maintenance](#monitoring-and-maintenance)
+6. [Troubleshooting](#troubleshooting)
+
+---
+
+## Security Configuration
+
+### Critical Security Settings
+
+Before deploying to production, ensure these security settings are configured in the Supabase Dashboard:
+
+#### 1. Enable Leaked Password Protection
+- **Location**: Supabase Dashboard > Authentication > Policies
+- **Action**: Enable password breach detection via HaveIBeenPwned.org
+- **Priority**: HIGH - Must be enabled before production
+
+#### 2. Configure Auth DB Connection Strategy
+- **Location**: Supabase Dashboard > Project Settings > Database
+- **Action**: Change from fixed 10 connections to percentage-based (10-15%)
+- **Priority**: MEDIUM - Important for scaling
+
+#### 3. Review RLS Policies
+All RLS policies have been optimized for performance and security:
+- ✅ Using `(select auth.uid())` for optimal performance
+- ✅ Consolidated policies to prevent multiple permissive warnings
+- ✅ Fixed WITH CHECK clauses to prevent unauthorized access
+- ✅ Functions have explicit search_path for security
+
+For complete security configuration instructions, see [SECURITY_CONFIGURATION.md](./SECURITY_CONFIGURATION.md).
+
+### Security Migrations Applied
+
+- **Initial Schema**: `20260120060738_create_dating_app_schema.sql`
+- **Security Fixes**: `fix_rls_performance_and_security.sql`
+  - Optimized all RLS policies for performance
+  - Consolidated duplicate SELECT policies
+  - Fixed message UPDATE policy security issue
+  - Added explicit search_path to all functions
 
 ---
 
