@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Heart, MessageCircle, User, LogOut, Settings } from 'lucide-react';
+import { Heart, MessageCircle, User, LogOut, Settings, Sparkles } from 'lucide-react';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import Login from './components/Auth/Login';
 import Signup from './components/Auth/Signup';
@@ -7,12 +7,13 @@ import ProfileSetup from './components/Profile/ProfileSetup';
 import EditProfile from './components/Profile/EditProfile';
 import Discover from './components/Discover/Discover';
 import Matches from './components/Matches/Matches';
+import MatchesList from './components/Matches/MatchesList';
 import Chat from './components/Messages/Chat';
 import type { Database } from './lib/database.types';
 
 type Profile = Database['public']['Tables']['profiles']['Row'];
 
-type View = 'discover' | 'matches' | 'profile';
+type View = 'discover' | 'browse' | 'matches' | 'profile';
 
 function MainApp() {
   const { user, profile, loading, signOut } = useAuth();
@@ -90,6 +91,7 @@ function MainApp() {
 
       <main className="flex-1 overflow-hidden">
         {currentView === 'discover' && <Discover />}
+        {currentView === 'browse' && <MatchesList />}
         {currentView === 'matches' && (
           <Matches onOpenChat={(conversationId, profile) => setChatView({ conversationId, profile })} />
         )}
@@ -175,6 +177,18 @@ function MainApp() {
           </button>
 
           <button
+            onClick={() => setCurrentView('browse')}
+            className={`flex flex-col items-center gap-1 px-4 py-2 rounded-lg transition-colors ${
+              currentView === 'browse'
+                ? 'text-pink-500'
+                : 'text-gray-600 hover:bg-gray-100'
+            }`}
+          >
+            <Sparkles className="w-6 h-6" fill={currentView === 'browse' ? 'currentColor' : 'none'} />
+            <span className="text-xs font-medium">Browse</span>
+          </button>
+
+          <button
             onClick={() => setCurrentView('matches')}
             className={`flex flex-col items-center gap-1 px-4 py-2 rounded-lg transition-colors ${
               currentView === 'matches'
@@ -183,7 +197,7 @@ function MainApp() {
             }`}
           >
             <MessageCircle className="w-6 h-6" fill={currentView === 'matches' ? 'currentColor' : 'none'} />
-            <span className="text-xs font-medium">Matches</span>
+            <span className="text-xs font-medium">Chats</span>
           </button>
 
           <button

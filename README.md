@@ -6,6 +6,16 @@ A production-ready dating application built with React, TypeScript, and Supabase
 
 - **User Authentication**: Email/password authentication with Supabase Auth
 - **Profile Management**: Multi-step profile creation with interests, location, and preferences
+- **Smart Matching Engine**: Production-ready recommendation system
+  - Weighted scoring algorithm (interests, recency, profile quality, mutual likes, distance)
+  - Realtime and precomputed (batch) modes for optimal performance
+  - Privacy-first with block lists and visibility controls
+  - Sub-300ms response times with pagination support
+- **Browse Matches**: Beautiful grid view of personalized match recommendations
+  - Match scores with color-coded badges (0-100%)
+  - Top 3 reasons for each match
+  - Fresh/Smart mode toggle
+  - Like/Pass actions with instant feedback
 - **Smart Discovery**: Swipe-based interface for discovering potential matches
 - **Mutual Matching**: Automatic match creation when two users like each other
 - **Real-time Messaging**: Live chat functionality with conversation management
@@ -261,6 +271,9 @@ Test data can be seeded using `supabase/seed.sql`. This creates sample users, pr
 ## Documentation
 
 - **[RUNBOOK.md](./RUNBOOK.md)** - Operations guide for database migrations, backups, deployment, and troubleshooting
+- **[RUNBOOK_MATCHING.md](./RUNBOOK_MATCHING.md)** - Matching engine operations, rollout plan, and monitoring
+- **[MATCHING_ENGINE_SUMMARY.md](./MATCHING_ENGINE_SUMMARY.md)** - Complete matching engine implementation summary
+- **[MATCHING_INTEGRATION_GUIDE.md](./MATCHING_INTEGRATION_GUIDE.md)** - Frontend integration guide for the Browse feature
 - **[SECURITY_CONFIGURATION.md](./SECURITY_CONFIGURATION.md)** - Security configuration guide for Supabase Dashboard settings
 - **[EXPORT_CHECKLIST.md](./EXPORT_CHECKLIST.md)** - Pre-deployment checklist and export workflow
 - **[.env.example](./.env.example)** - Template for environment variables
