@@ -1,0 +1,27 @@
+name: Migrations CI
+on:
+  pull_request:
+    paths:
+      - 'supabase/migrations/**'
+jobs:
+  migrations:
+    name: migrations
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Supabase CLI
+        uses: supabase/setup-cli@v1
+
+      - name: Install psql client
+        run: sudo apt-get update && sudo apt-get install -y postgresql-client
+
+      - name: Apply Supabase migrations to staging
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_PROJECT_REF: ${{ secrets.SUPABASE_PROJECT_REF_STAGING }}
+        run: |
+          # sanity check
+          supabase --version
+          # push migrations to the staging project
+          supabase db push --project-ref $SUPABASE_PROJECT_REF
