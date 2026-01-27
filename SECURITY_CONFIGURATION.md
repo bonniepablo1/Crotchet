@@ -2,6 +2,21 @@
 
 This document outlines required security configurations that must be set in the Supabase Dashboard. These settings cannot be automated via migrations and require manual configuration.
 
+## 🔒 Security Status Summary
+
+| Issue | Status | Action Required |
+|-------|--------|-----------------|
+| Unindexed foreign keys | ✅ FIXED | None - Migration applied |
+| SECURITY DEFINER views | ✅ FIXED | None - Using SECURITY INVOKER |
+| Unused indexes warning | ℹ️ EXPECTED | None - Will be used in production |
+| Leaked Password Protection | ⚠️ MANUAL | Enable in Auth settings |
+| Auth DB Connection Strategy | ⚠️ MANUAL | Change to percentage-based |
+
+**Last Updated**: 2026-01-27
+**Migration Applied**: `add_matching_engine_schema`
+
+---
+
 ## Critical Security Settings
 
 ### 1. Enable Leaked Password Protection
@@ -41,6 +56,46 @@ This document outlines required security configurations that must be set in the 
 
 ---
 
+---
+
+### 3. Performance Indexes (Informational)
+
+**Priority**: INFO
+**Status**: ✅ Automatically configured via migration
+
+**Context**: The Supabase dashboard may flag certain indexes as "unused" because they haven't been queried yet. This is expected for a new deployment and these indexes are essential for the matching engine.
+
+**Indexes and Their Purpose**:
+
+| Index Name | Table | Purpose | When Used |
+|------------|-------|---------|-----------|
+| `idx_profiles_dob` | profiles | Age filtering in matches | Every match query |
+| `idx_profiles_gender` | profiles | Gender preference filtering | Every match query |
+| `idx_profiles_last_active` | profiles | Recency scoring | Every match query |
+| `idx_profiles_is_active` | profiles | Active user filtering | Every match query |
+| `idx_profiles_coordinates` | profiles | Distance calculations | Match queries with location |
+| `idx_profiles_visibility_active` | profiles | Composite filter optimization | Every match query |
+| `idx_likes_liker` | likes | User's sent likes lookup | Like history, mutual checks |
+| `idx_likes_likee` | likes | User's received likes lookup | Like history, mutual checks |
+| `idx_likes_likee_liker` | likes | Mutual like detection | Instant mutual match checks |
+| `idx_likes_created` | likes | Chronological sorting | Recent activity displays |
+| `idx_matches_user1` | matches | Match list queries | Matches tab, chat lists |
+| `idx_matches_user2` | matches | Reverse match lookups | Match existence checks |
+| `idx_conversations_match` | conversations | Conversation lookups | Every chat open |
+| `idx_messages_conversation` | messages | Message list queries | Every chat view |
+| `idx_messages_sender` | messages | Sender filtering | Message history |
+| `idx_blocked_users_blocker` | blocked_users | Block list lookups | Every match query |
+| `idx_blocked_users_blocked` | blocked_users | Reverse block checks | Every match query |
+| `idx_precomputed_matches_user_score` | precomputed_matches | Sorted match retrieval | Smart Mode browsing |
+| `idx_precomputed_matches_candidate` | precomputed_matches | Foreign key coverage | Cascade deletions |
+| `idx_match_scores_log_user_created` | match_scores_log | Audit log queries | Admin debugging |
+
+**Action Required**: None. These indexes will show usage once the matching features are actively used.
+
+**Important**: Do NOT delete these indexes even if the dashboard shows them as unused. They are critical for performance at scale.
+
+---
+
 ## Security Best Practices
 
 ### Database Security
@@ -48,6 +103,8 @@ This document outlines required security configurations that must be set in the 
 #### Row Level Security (RLS)
 - ✅ All tables have RLS enabled
 - ✅ All policies use optimized `(select auth.uid())` syntax for performance
+- ✅ No SECURITY DEFINER views (only used in triggers where required)
+- ✅ All foreign keys have covering indexes
 - ✅ Policies are consolidated to prevent multiple permissive policy warnings
 - ✅ All WITH CHECK clauses properly validate ownership/access
 
